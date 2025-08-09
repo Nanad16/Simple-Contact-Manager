@@ -5,15 +5,21 @@ import Card from './components/Card';
 import { Button } from '@mui/material';
 
 function App() {
-  // State for username, password, and login status
+  // State for username, password, login status, and error message
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [error, setError] = useState('');
 
-  // Handle login
+  // Handle login with credential check
   const handleLogin = () => {
-    // Add real authentication logic here
-    setIsLoggedIn(true);
+    // Example: username = "admin", password = "password"
+    if (username === 'admin' && password === 'password') {
+      setIsLoggedIn(true);
+      setError('');
+    } else {
+      setError('Invalid username or password');
+    }
   };
 
   // Dashboard component
@@ -45,6 +51,9 @@ function App() {
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
+          {error && (
+            <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>
+          )}
           <Button
             variant="contained"
             color="primary"

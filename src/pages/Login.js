@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card  from "../components/Card";
 import { Button } from "@mui/material";
-import { useState } from "react";
 
-function Login({ onLogin }) {
+function Login({ onLogin, resetForm }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  // Reset form when resetForm prop changes
+  useEffect(() => {
+    if (resetForm) {
+      setUsername('');
+      setPassword('');
+      setError('');
+    }
+  }, [resetForm]);
 
   // Handle login with credential check
   const handleLogin = () => {

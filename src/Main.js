@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [resetForm, setResetForm] = useState(false);
 
   // Check localStorage on component mount
   useEffect(() => {
@@ -24,6 +25,7 @@ function Main() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername('');
+    setResetForm(true);
     // Clear localStorage on logout
     localStorage.removeItem('username');
     localStorage.removeItem('isLoggedIn');
@@ -32,6 +34,7 @@ function Main() {
   const handleLogin = (username, loginState) => {
     setIsLoggedIn(loginState);
     setUsername(username);
+    setResetForm(false);
     // Store login state in localStorage
     localStorage.setItem('username', username);
     localStorage.setItem('isLoggedIn', loginState);
@@ -41,7 +44,7 @@ function Main() {
   return (
     <div className="App">
       {!isLoggedIn ? (
-        <Login onLogin={handleLogin} />
+        <Login onLogin={handleLogin} resetForm={resetForm} />
       ) : (
         <Dashboard username={username} onLogout={handleLogout} />
       )}

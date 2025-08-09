@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import ContactTableRow from "../components/ContactTableRow";
 import AddContactDialog from "../components/AddContactDialog";
+import EditContactDialog from "../components/EditContactDialog";
 
 function Dashboard({ username, onLogout }) {
   const [contacts, setContacts] = useState(() => {
@@ -38,6 +39,8 @@ function Dashboard({ username, onLogout }) {
   }, [contacts]);
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
 
   const handleAddContact = () => {
     setIsAddDialogOpen(true);
@@ -45,6 +48,23 @@ function Dashboard({ username, onLogout }) {
 
   const handleAddContactSubmit = (newContact) => {
     const updatedContacts = [...contacts, newContact];
+    setContacts(updatedContacts);
+  };
+
+  const handleEditContact = (contact) => {
+    setSelectedContact(contact);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleEditContactSubmit = (editedContact) => {
+    const updatedContacts = contacts.map((contact) =>
+      contact.id === editedContact.id ? editedContact : contact
+    );
+    setContacts(updatedContacts);
+  };
+
+  const handleDeleteContact = (contactId) => {
+    const updatedContacts = contacts.filter((contact) => contact.id !== contactId);
     setContacts(updatedContacts);
   };
 
@@ -101,10 +121,8 @@ function Dashboard({ username, onLogout }) {
               <ContactTableRow
                 key={contact.id}
                 contact={contact}
-                onDelete={() => {
-                  const updatedContacts = contacts.filter((c) => c.id !== contact.id);
-                  setContacts(updatedContacts);
-                }}
+                onEdit={() => handleEditContact(contact)}
+                onDelete={() => handleDeleteContact(contact.id)}
               />
             ))}
           </TableBody>
@@ -115,6 +133,12 @@ function Dashboard({ username, onLogout }) {
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         onAdd={handleAddContactSubmit}
+      />
+      <EditContactDialog
+        open={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
+        onSave={handleEditContactSubmit}
+        contact={selectedContact}
       />
     </div>
   );
